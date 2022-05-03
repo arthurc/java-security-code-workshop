@@ -23,11 +23,10 @@ public class SearchRepo {
 
 
     public List<User> findUsersByUsername(String parameter) {
-        try {
-            Connection connection = DriverManager.getConnection(DB_URL, USER, PASS);
-            String query = "SELECT * FROM users WHERE username LIKE '" + parameter + "'";
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery(query);
+        try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS);
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE username LIKE ?")) {
+            statement.setString(1, parameter);
+            ResultSet result = statement.executeQuery();
             List<User> foundUsers = createUsersFromResultSet(result);
             logger.info("Users found: {}", foundUsers);
             return foundUsers;
