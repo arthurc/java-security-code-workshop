@@ -6,6 +6,9 @@ import io.snyk.demo.repo.SearchRepo;
 import io.snyk.demo.repo.UserRepo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.owasp.encoder.Encode;
+import org.owasp.encoder.Encoder;
+import org.owasp.encoder.Encoders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,7 +38,7 @@ public class UserController {
     public void directLink (@RequestParam String param, HttpServletResponse response) throws IOException {
         List<User> found = searchRepo.findUsersByUsername(param);
         response.setContentType("text/html");
-        response.getWriter().write("<h1>User: "+ param + "</h1>");
+        response.getWriter().write("<h1>User: "+ Encode.forHtml(param) + "</h1>");
 
         for (User user : found) {
             String output = "<ul>" +
